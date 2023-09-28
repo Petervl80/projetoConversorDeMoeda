@@ -1,1 +1,14 @@
+:root {
+    font-size: 92.5%;
+    font-size: 1.6rem;
+}
 
+header {
+    height: 8rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid #888888;
+}
