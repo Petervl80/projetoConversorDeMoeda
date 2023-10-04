@@ -6,7 +6,9 @@ export function About() {
       </h2>
 
       <p className="text-muted-foreground first-letter:font-bold first-letter:text-2xl">
-        Este sistema envolve um conversor de moedas em tempo real.
+        Este projeto envolve um conversor de moedas em tempo real. Nele você pode consultar dados para que tenha o maior aproveitamento em questão de negócios, como consultas
+        da moeda de determinado País e prevendo o melhor dia para que você possa comprar específica moeda. Seja de uso pessoal ou empresarial, aqui você sai lucrando.
+        Conheça nossa equipe: Bruno Gabriell, Fellipe Soares, Hilquiade Soares, Pedro Vinícius, Robson Nunes e Wollace Martins.
       </p>
     </>
   )
