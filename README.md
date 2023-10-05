@@ -7,6 +7,7 @@
 * Bruno Gabriell - 01529450
 * Hilquiades Soares - 01526768
 * Fellipe Soares - 01557822
+* Fabiano Vandré - 01529527
 
 ### Front-end
 
