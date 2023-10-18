@@ -1,13 +1,17 @@
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
-import { Input } from "./ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { COUNTRY_LIST } from "@/utils/country-list"
-import { Button } from "./ui/button"
+
 import { ChartLine, SpinnerGap } from "@phosphor-icons/react"
+
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+import { Input } from "./ui/input"
+import { Button } from "./ui/button"
+
 import { useState } from "react"
+
+import { COUNTRY_LIST } from "@/utils/country-list"
 
 const formSchema = z.object({
   amount: z.coerce.number({
@@ -37,16 +41,22 @@ export function ConversionForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsConverting(true)
 
-    const response = await fetch(`https://v6.exchangerate-api.com/v6/${import.meta.env.VITE_EXCHANGERATE_API}/latest/${values.from}`)
-    const data = await response.json()
+    try {
+      const response = await fetch(`https://v6.exchangerate-api.com/v6/${import.meta.env.VITE_EXCHANGERATE_API}/latest/${values.from}`)
+      const data = await response.json()
 
-    const converted = values.amount * data.conversion_rates[values.to]
-    setConverted(converted)
-    setConvertedExchange(values.to)
+      const converted = values.amount * data.conversion_rates[values.to]
+      setConverted(converted)
+      setConvertedExchange(values.to)
+    } catch (error) {
+      console.error(error)
+    }
+
     setIsConverting(false)
   }
 
-  const sortedCountriesByValue = Object.entries(COUNTRY_LIST).sort(([, a], [, b]) => a.localeCompare(b))
+  const sortedCountriesByValue = Object.entries(COUNTRY_LIST).sort(([, a], [, b]) => a.name.localeCompare(b.name))
+  const convertedIso = convertedExchange ? sortedCountriesByValue.find(([country]) => country === convertedExchange)?.[1].iso : null
 
   return (
     <Form {...form}>
@@ -63,14 +73,15 @@ export function ConversionForm() {
                   onChange={event => field.onChange(event.target.valueAsNumber)}
                   placeholder="Valor para ser convertido"
                   type="number"
-                  min={0} />
+                  min={0}
+                  step={0.01} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-rows-2 sm:grid-rows-none sm:grid-cols-2 gap-3 sm:gap-4">
           <FormField
             control={form.control}
             name="from"
@@ -85,8 +96,16 @@ export function ConversionForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="overflow-y-auto max-h-96">
-                    {sortedCountriesByValue.map(([country, countryName]) => (
-                      <SelectItem key={country} value={country}>{countryName}</SelectItem>
+                    {sortedCountriesByValue.map(([country, countryOBJ]) => (
+                      <SelectItem key={country} value={country}>
+                        <img
+                          className="w-5 h-5 object-contain mr-2 inline-block"
+                          src={`https://flagsapi.com/${countryOBJ.iso.toUpperCase()}/flat/64.png`}
+                          alt={countryOBJ.iso}
+                          loading="lazy"
+                          draggable={false} />
+                        {countryOBJ.name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -110,8 +129,16 @@ export function ConversionForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="overflow-y-auto max-h-96">
-                    {sortedCountriesByValue.map(([country, countryName]) => (
-                      <SelectItem key={country} value={country}>{countryName}</SelectItem>
+                    {sortedCountriesByValue.map(([country, countryOBJ]) => (
+                      <SelectItem key={country} value={country}>
+                        <img
+                          className="w-5 h-5 object-contain mr-2 inline-block"
+                          src={`https://flagsapi.com/${countryOBJ.iso.toUpperCase()}/flat/64.png`}
+                          alt={countryOBJ.iso}
+                          loading="lazy"
+                          draggable={false} />
+                        {countryOBJ.name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -122,18 +149,28 @@ export function ConversionForm() {
           />
         </div>
 
-        <div className="flex items-center">
+        <div className="flex flex-wrap items-center">
           {isConverting && (
             <SpinnerGap className="h-5 w-5 text-muted-foreground animate-spin" />
           )}
 
           {converted && convertedExchange && !isConverting && (
-            <strong className="text-primary text-lg">
-              {converted.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: convertedExchange,
-              })}
-            </strong>
+            <div className="flex">
+              <img
+                className="w-7 h-7 object-contain mr-2 inline-block"
+                src={`https://flagsapi.com/${convertedIso}/flat/64.png`}
+                alt={convertedExchange}
+                loading="lazy"
+                draggable={false} />
+
+
+              <strong className="text-primary text-lg break-all mr-1">
+                {converted.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: convertedExchange,
+                })}
+              </strong>
+            </div>
           )}
 
           <Button className="flex ml-auto" disabled={isConverting || !form.formState.isValid}>

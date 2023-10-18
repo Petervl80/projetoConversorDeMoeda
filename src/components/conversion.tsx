@@ -5,11 +5,11 @@ import { ConversionForm } from "./conversion-form";
 export function Conversion() {
   return (
     <>
-      <h2 className="text-3xl font-bold">
+      <h2 className="text-3xl font-bold text-center sm:text-start">
         Converter moeda
       </h2>
 
-      <div className="grid gap-4 grid-cols-2 my-6">
+      <div className="grid grid-rows-2 sm:grid-rows-none sm:grid-cols-2 gap-3 sm:gap-4 mt-6 mb-3 sm:my-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -55,9 +55,7 @@ export function Conversion() {
           <CardTitle>Converter</CardTitle>
         </CardHeader>
         <CardContent>
-
           <ConversionForm />
-
         </CardContent>
       </Card>
     </>

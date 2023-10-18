@@ -9,8 +9,7 @@ function App() {
     <div className="flex flex-col min-h-screen">
       <Header />
 
-      <main className="max-w-6xl mx-auto flex-1 w-full py-8">
-
+      <main className="max-w-6xl mx-auto flex-1 w-full py-8 px-4">
         <Conversion />
 
         <About />
