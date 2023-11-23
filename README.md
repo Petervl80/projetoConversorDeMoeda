@@ -11,7 +11,7 @@
 
 ### Front-end
 
-Para executar o site utilizamos Vite.
+Para criar o site utilizamos Vite, Tailwind, Shadcn/ui, e Radix UI..
 
 ```sh
 # Instalando suas dependências
@@ -23,3 +23,9 @@ cp .env.example .env
 # Subir o site
 npm run start
 ```
+### Características
+
+- Deve ser possível converter qualquer moeda
+- Deve ser possível ver a moeda mais convertida do site
+- Deve ser possível ver o total de conversões
+- Deve ser possível ver a diferença entre o mês anterior do total de conversões 
