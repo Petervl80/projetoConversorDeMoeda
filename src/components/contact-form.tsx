@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { PaperPlaneTilt, SpinnerGap } from "@phosphor-icons/react"
+import { SpinnerGap, WhatsappLogo } from "@phosphor-icons/react"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
@@ -9,11 +9,10 @@ import { Textarea } from "./ui/textarea"
 import { useState } from "react"
 
 const formSchema = z.object({
-  email: z.string({
-    required_error: "O e-mail é obrigatório",
-    description: "meuemail@outlook.com",
+  name: z.string({
+    required_error: "O nome é obrigatório",
   })
-    .email("Digite um e-mail válido"),
+    .min(3, "O nome deve ter no mínimo 3 caracteres"),
   subject: z.string()
     .min(5, "O assunto deve ter no mínimo 5 caracteres"),
   message: z.string()
@@ -30,8 +29,10 @@ export function ContactForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSending(true)
 
-    console.log(values)
+    const WHATSAPP_TEXT =
+      `Olá, me chamo *${values.name}* e gostaria de falar sobre *${values.subject}*.\n\n${values.message}`.trim()
 
+    window.open(`https://api.whatsapp.com/send?phone=${encodeURIComponent("+5581985309916")}&text=${encodeURIComponent(WHATSAPP_TEXT)}`, "_blank");
 
     setIsSending(false)
   }
@@ -43,14 +44,14 @@ export function ContactForm() {
 
         <FormField
           control={form.control}
-          name="email"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Nome</FormLabel>
               <FormControl>
                 <Input
                   onChange={event => field.onChange(event.target.value)}
-                  placeholder="Digite seu email"
+                  placeholder="Digite seu nome"
                 />
               </FormControl>
               <FormDescription />
@@ -99,8 +100,8 @@ export function ContactForm() {
           )}
 
           <Button className="flex ml-auto" disabled={isSending || !form.formState.isValid}>
-            <PaperPlaneTilt className="w-5 h-5 mr-1" />
-            Enviar
+            <WhatsappLogo className="w-5 h-5 mr-1" />
+            Conversar
           </Button>
         </div>
       </form>
